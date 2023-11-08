@@ -2,6 +2,7 @@
 /* eslint-disable no-cond-assign */
 
 var tagExpr = /^<!-- ?\{(?:([a-z0-9]+)(\^[0-9]*)?: ?)?(.*)\} ?-->\n?$/
+var tagExprRehype = /^<!--rehype:(?:([a-z0-9]+)(\^[0-9]*)?: ?)?(.*)-->\n?$/;
 
 module.exports = function attributes (md) {
   md.core.ruler.push('curly_attributes', curlyAttrs)
@@ -51,7 +52,7 @@ function curlyAttrs (state) {
     // "# Hello\n<!--{.classname}-->"
     // ...sequence of [heading_open, inline, heading_close, html_block]
     if (token.type === 'html_block') {
-      m = token.content.match(tagExpr)
+      m = token.content.match(tagExpr) || token.content.match(tagExprRehype)
       if (!m) return
 
       parent = findParent(stack, m[1], m[2])
@@ -98,7 +99,7 @@ function curlyInline (children, stack) {
     }
 
     // Decorate tags are found
-    if (m = child.content.match(tagExpr)) {
+    if (m = child.content.match(tagExpr) || child.content.match(tagExprRehype)) {
       var tag = m[1]
       var depth = m[2]
       var attrs = m[3]

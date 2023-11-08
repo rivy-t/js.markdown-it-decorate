@@ -246,3 +246,10 @@ test('silent errors:', function (t) {
     '<p>hi <!--{a:.foo}--></p>\n')
   t.end()
 })
+
+test('rehype:', function (t) {
+  run(t,
+    'hi <!--rehype:class=foo-->',
+    '<p class="foo">hi</p>\n')
+  t.end()
+})
